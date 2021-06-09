@@ -35,5 +35,5 @@ jobs:
           # 开始同步
           #gclone copy ${{ secrets.FILE3_PATH }} --stats-log-level NOTICE -P --stats 30s --cache-chunk-total-size 30G --transfers=8 --drive-chunk-size 256M --onedrive-chunk-size 250M --max-backlog 1000 --ignore-size 
           #echo "6-td"
-          gclone copy  ${{ secrets.FILE4_PATH }} --stats-log-level NOTICE -P --stats 30s --cache-chunk-total-size 30G --transfers=9 --drive-chunk-size 256M --onedrive-chunk-size 250M --max-backlog 1000 --ignore-size
+          gclone copy  ${{ secrets.FILE4_PATH }} --stats-log-level NOTICE -P --stats 30s --cache-chunk-total-size 100G --transfers=9 --drive-chunk-size 320M --onedrive-chunk-size 250M --max-backlog 1000 --ignore-size
           echo "td-od" 
