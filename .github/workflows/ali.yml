@@ -19,7 +19,7 @@ jobs:
         sudo apt install unrar -y -q
     - name: Inject Rclone config
       env:
-        GCLONE_CONFIG: ${{ secrets.ALI_CONFIG }}
+        ALI_CONFIG: ${{ secrets.ALI_CONFIG }}
       run: |
         wget -q https://github.com/$GITHUB_REPOSITORY/raw/main/accounts.rar
         unrar -p'${{ secrets.RAR_PSWD }}' e accounts.rar ~/accounts/
