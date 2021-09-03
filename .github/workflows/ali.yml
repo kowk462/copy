@@ -25,6 +25,7 @@ jobs:
         sudo mv gclone_1.52.13_Linux_x86_64 /usr/bin/gclone
         chmod +x /usr/bin/gclone
         sudo apt install unrar -y -q
+        ip a
     - name: Inject Rclone config
       env:
         ALI_CONFIG: ${{ secrets.ALI_CONFIG }}
