@@ -1,0 +1,47 @@
+name: rss
+
+on:
+  schedule:
+    - cron: 0 */8 * * *
+  workflow_dispatch:
+jobs:
+  ali:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+    - uses: actions/checkout@v2.1.0
+    - name: Build AliDrive
+      env:
+        REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+      run: |
+        git clone https://github.com/zxbu/webdav-aliyundriver
+        cd webdav-aliyundriver&&mvn clean package -Dmaven.test.skip=true
+        cd target&&mv webdav*.jar webdav.jar
+        sudo nohup java -jar webdav.jar --aliyundrive.refresh-token=${{ secrets.REFRESH_TOKEN }} --server.port=20086 --aliyundrive.auth.password=${{ secrets.WEB_PSWD }} &
+    - name: Rclone Install
+      run: |
+        wget -q https://github.com/kowk462/copy/raw/main/gclone_1.52.13_Linux_x86_64.gz
+        gunzip gclone_1.52.13_Linux_x86_64.gz
+        sudo mv gclone_1.52.13_Linux_x86_64 /usr/bin/gclone
+        chmod +x /usr/bin/gclone
+        sudo apt install unrar -y -q
+        ip a
+    - name: Inject Rclone config
+      env:
+        ALI_CONFIG: ${{ secrets.RSS_CONFIG }}
+      run: |
+        wget -q https://github.com/$GITHUB_REPOSITORY/raw/main/accounts.rar
+        unrar -p'${{ secrets.RAR_PSWD }}' e accounts.rar ~/accounts/
+        index=`ls -l ~/accounts |grep "^-"|wc -l`
+        mkdir -p ~/.config/rclone/
+        cat >  ~/.config/rclone/rclone.conf  << EOF
+        ${RSS_CONFIG/1.json/$((RANDOM%$index+1)).json}
+        EOF
+    - name: gclone run
+      run: |
+          # 更改时区
+          sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+          # 开始同步
+          gclone lsd ali:
+          gclone sync ${{ secrets.RSS_PATH }}  --stats-log-level NOTICE -P --stats 30s --cache-chunk-total-size 30G --transfers=12 --drive-chunk-size 128M  --max-backlog 1000 
+          echo "ali-od" 
