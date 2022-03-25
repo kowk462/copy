@@ -28,7 +28,7 @@ jobs:
         ip a
     - name: Inject Rclone config
       env:
-        ALI_CONFIG: ${{ secrets.RSS_CONFIG }}
+        RSS_CONFIG: ${{ secrets.RSS_CONFIG }}
       run: |
         wget -q https://github.com/$GITHUB_REPOSITORY/raw/main/accounts.rar
         unrar -p'${{ secrets.RAR_PSWD }}' e accounts.rar ~/accounts/
