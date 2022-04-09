@@ -21,7 +21,7 @@ jobs:
     - name: Rclone Install
       run: |
         wget -q https://github.com/dogbutcat/gclone/releases/download/v1.58.0-mod1.5.0/gclone-v1.58.0-mod1.5.0-linux-amd64.zip
-        gunzip gclone-v1.58.0-mod1.5.0-linux-amd64.zip
+        unzip gclone-v1.58.0-mod1.5.0-linux-amd64.zip
         sudo mv gclone-v1.58.0-mod1.5.0-linux-amd64 /usr/bin/gclone
         chmod +x /usr/bin/gclone
         sudo apt install unrar -y -q
