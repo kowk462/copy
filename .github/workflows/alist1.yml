@@ -1,0 +1,39 @@
+name: alist1
+
+on:
+  schedule:
+    - cron: 0 */8 * * *
+  workflow_dispatch:
+jobs:
+  alist1:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+    - uses: actions/checkout@v2.1.0
+    - name: Rclone Install
+      run: |
+        wget -q https://github.com/dogbutcat/gclone/releases/download/v1.58.0-mod1.5.0/gclone-v1.58.0-mod1.5.0-linux-amd64.zip
+        unzip gclone-v1.58.0-mod1.5.0-linux-amd64.zip
+        sudo mv gclone-v1.58.0-mod1.5.0-linux-amd64/gclone /usr/bin/gclone
+        chmod +x /usr/bin/gclone
+        sudo apt install unrar -y -q
+        ip a
+    - name: Inject Rclone config
+      env:
+        ALIST_CONFIG: ${{ secrets.ALIST_CONFIG }}
+      run: |
+        wget -q https://github.com/$GITHUB_REPOSITORY/raw/main/accounts.rar
+        unrar -p'${{ secrets.RAR_PSWD }}' e accounts.rar ~/accounts/
+        index=`ls -l ~/accounts |grep "^-"|wc -l`
+        mkdir -p ~/.config/rclone/
+        cat >  ~/.config/rclone/rclone.conf  << EOF
+        ${ALIST_CONFIG/1.json/$((RANDOM%$index+1)).json}
+        EOF
+    - name: gclone run
+      run: |
+          # 更改时区
+          sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+          # 开始同步
+          gclone lsd ali:
+          gclone copy ${{ secrets.ALIST1_PATH }}  --stats-log-level NOTICE -P --stats 30s --cache-chunk-total-size 30G --transfers=12 --drive-chunk-size 128M  --max-backlog 1000
+          echo "DONE" 
