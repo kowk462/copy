@@ -14,7 +14,7 @@ jobs:
       env:
         REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
       run: |
-        git clone https://github.com/zxbu/webdav-aliyundriver
+        git clone https://github.com/dowsonlee2007/webdav-aliyundriver
         cd webdav-aliyundriver&&mvn clean package -Dmaven.test.skip=true
         cd target&&mv webdav*.jar webdav.jar
         sudo nohup java -jar webdav.jar --aliyundrive.refresh-token=${{ secrets.REFRESH_TOKEN }} --server.port=20086 --aliyundrive.auth.password=${{ secrets.WEB_PSWD }} &
