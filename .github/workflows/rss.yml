@@ -1,3 +1,4 @@
+
 name: rss
 
 on:
@@ -10,32 +11,24 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
     steps:
     - uses: actions/checkout@v2.1.0
-    - name: Build AliDrive
-      env:
-        REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-      run: |
-        git clone https://github.com/zxbu/webdav-aliyundriver
-        cd webdav-aliyundriver&&mvn clean package -Dmaven.test.skip=true
-        cd target&&mv webdav*.jar webdav.jar
-        sudo nohup java -jar webdav.jar --aliyundrive.refresh-token=${{ secrets.REFRESH_TOKEN }} --server.port=20086 --aliyundrive.auth.password=${{ secrets.WEB_PSWD }} &
     - name: Rclone Install
       run: |
-        wget -q https://github.com/kowk462/copy/raw/main/gclone_1.52.13_Linux_x86_64.gz
-        gunzip gclone_1.52.13_Linux_x86_64.gz
-        sudo mv gclone_1.52.13_Linux_x86_64 /usr/bin/gclone
+        wget -q https://github.com/dogbutcat/gclone/releases/download/v1.58.0-mod1.5.0/gclone-v1.58.0-mod1.5.0-linux-amd64.zip
+        unzip gclone-v1.58.0-mod1.5.0-linux-amd64.zip
+        sudo mv gclone-v1.58.0-mod1.5.0-linux-amd64/gclone /usr/bin/gclone
         chmod +x /usr/bin/gclone
         sudo apt install unrar -y -q
         ip a
     - name: Inject Rclone config
       env:
-        RSS_CONFIG: ${{ secrets.RSS_CONFIG }}
+        ALIST_CONFIG: ${{ secrets.ALIST_CONFIG }}
       run: |
         wget -q https://github.com/$GITHUB_REPOSITORY/raw/main/accounts.rar
         unrar -p'${{ secrets.RAR_PSWD }}' e accounts.rar ~/accounts/
         index=`ls -l ~/accounts |grep "^-"|wc -l`
         mkdir -p ~/.config/rclone/
         cat >  ~/.config/rclone/rclone.conf  << EOF
-        ${RSS_CONFIG/1.json/$((RANDOM%$index+1)).json}
+        ${ALIST_CONFIG/1.json/$((RANDOM%$index+1)).json}
         EOF
     - name: gclone run
       run: |
