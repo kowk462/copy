@@ -1,4 +1,3 @@
-
 name: rss
 
 on:
@@ -35,5 +34,6 @@ jobs:
           # 更改时区
           sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
           # 开始同步
-          gclone sync ${{ secrets.RSS_PATH }}  --stats-log-level NOTICE -P --stats 30s --cache-chunk-total-size 30G --transfers=12 --drive-chunk-size 128M  --max-backlog 1000 
-          echo "ali-od" 
+          gclone lsd ali:
+          gclone copy ${{ secrets.RSS_PATH }}  --stats-log-level NOTICE -P --stats 30s --cache-chunk-total-size 30G --transfers=12 --drive-chunk-size 128M  --max-backlog 1000
+          echo "DONE" 
