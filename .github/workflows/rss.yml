@@ -15,10 +15,10 @@ jobs:
     - uses: actions/checkout@v2.1.0
     - name: Rclone Install
       run: |
-        wget -q https://github.com/mawaya/rclone/releases/download/fclone-v0.4.1/fclone-v0.4.1-linux-amd64.zip
-        unzip fclone-v0.4.1-linux-amd64.zip
-        sudo mv fclone-v0.4.1-linux-amd64/fclone /usr/bin/fclone
-        chmod +x /usr/bin/fclone
+        wget -q https://github.com/dogbutcat/gclone/releases/download/v1.60.0-mod1.5.1/gclone-v1.60.0-mod1.5.1-linux-amd64.zip
+        unzip gclone-v1.60.0-mod1.5.1-linux-amd64.zip
+        sudo mv gclone-v1.60.0-mod1.5.1-linux-amd64/gclone /usr/bin/gclone
+        chmod +x /usr/bin/gclone
         sudo apt install unrar -y -q
         ip a
     - name: Inject Rclone config
