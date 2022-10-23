@@ -1,13 +1,15 @@
 name: alist
 
 on:
+  push:
+    branches:
+      - master
   schedule:
     - cron: 0 */8 * * *
   workflow_dispatch:
 jobs:
   alist:
     runs-on: ubuntu-latest
-    if: github.event.repository.owner.id == github.event.sender.id
     steps:
     - uses: actions/checkout@v2.1.0
     - name: Rclone Install
