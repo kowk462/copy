@@ -1,4 +1,4 @@
-name: 115
+name: e
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     - cron: 0 */8 * * *
   workflow_dispatch:
 jobs:
-  115:
+  e:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.1.0
