@@ -22,13 +22,13 @@ jobs:
         ip a
     - name: Inject Rclone config
       env:
-        115CONFIG: ${{ secrets.115CONFIG }}
+        eCONFIG: ${{ secrets.eCONFIG }}
       run: |
         wget -q https://github.com/$GITHUB_REPOSITORY/raw/main/accounts.rar
         unrar -p'${{ secrets.RAR_PSWD }}' e accounts.rar ~/accounts/
         index=`ls -l ~/accounts |grep "^-"|wc -l`
         mkdir -p ~/.config/rclone/
-        wget -O ~/.config/rclone/rclone.conf "https://gist.githubusercontent.com/115CONFIG/56b0748347bfcdadb24f5045c9990760/raw/f4a241415ebf54f8e3c966aefef81fd04dc100d9/115"
+        wget -O ~/.config/rclone/rclone.conf "https://gist.githubusercontent.com/eCONFIG/56b0748347bfcdadb24f5045c9990760/raw/f4a241415ebf54f8e3c966aefef81fd04dc100d9/115"
     - name: gclone run
       run: |
           # 更改时区
