@@ -36,5 +36,5 @@ jobs:
           # 更改时区
           sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
           # 开始同步
-          rclone copy ${{ secrets.115_PATH }}  --multi-thread-streams=2 --transfers=5 
+          rclone copy ${{ secrets.e_PATH }}  --multi-thread-streams=2 --transfers=5 
           echo "DONE" 
