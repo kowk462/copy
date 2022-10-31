@@ -28,9 +28,9 @@ jobs:
         unrar -p'${{ secrets.RAR_PSWD }}' e accounts.rar ~/accounts/
         index=`ls -l ~/accounts |grep "^-"|wc -l`
         mkdir -p ~/.config/rclone/
-        cat >  ~/.config/rclone/rclone.conf  << EOF
-        ${115_CONFIG/1.json/$((RANDOM%$index+1)).json}
-        EOF
+        echo ${{ secrets.115_CONFIG }} > base64.txt
+        base64 --decode base64.txt > ~/.config/rclone/rclone.conf
+
     - name: gclone run
       run: |
           # 更改时区
