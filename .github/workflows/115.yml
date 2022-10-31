@@ -1,0 +1,40 @@
+name: 115
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: 0 */8 * * *
+  workflow_dispatch:
+jobs:
+  115:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.1.0
+    - name: Rclone Install
+      run: |
+        wget -q https://github.com/gaoyb7/rclone-release/releases/download/v1_20221024/rclone_v1_20221024_Linux_arm64.tar.gz
+        tar xvf rclone_v1_20221024_Linux_arm64.tar.gz
+        sudo mv rclone /usr/bin/gclone
+        chmod +x /usr/bin/rclone
+        sudo apt install unrar -y -q
+        ip a
+    - name: Inject Rclone config
+      env:
+        115_CONFIG: ${{ secrets.115_CONFIG }}
+      run: |
+        wget -q https://github.com/$GITHUB_REPOSITORY/raw/main/accounts.rar
+        unrar -p'${{ secrets.RAR_PSWD }}' e accounts.rar ~/accounts/
+        index=`ls -l ~/accounts |grep "^-"|wc -l`
+        mkdir -p ~/.config/rclone/
+        cat >  ~/.config/rclone/rclone.conf  << EOF
+        ${115_CONFIG/1.json/$((RANDOM%$index+1)).json}
+        EOF
+    - name: gclone run
+      run: |
+          # 更改时区
+          sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+          # 开始同步
+          rclone copy ${{ secrets.115_PATH }}  --multi-thread-streams=2 --transfers=5 
+          echo "DONE" 
